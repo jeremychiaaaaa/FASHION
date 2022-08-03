@@ -17,7 +17,7 @@ import InstaStory from 'react-native-insta-story';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DiscoverStack } from './Discover';
 import { useSelector, useDispatch } from 'react-redux';
-import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex,setChangeAddress,setSelectedAddress } from './redux/actions';
+import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex,setChangeAddress,setSelectedAddress } from '../redux/actions';
 import { BlurView } from 'expo-blur';
 import LottieView from 'lottie-react-native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -25,7 +25,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
 import HorizontalBarGraph from '@chartiful/react-native-horizontal-bar-graph'
-import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,getAddress,createOrder } from './firebase';
+import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,getAddress,createOrder } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import {doc, setDoc, addDoc, getFirestore, collection} from 'firebase/firestore'
 import CounterInput from "react-native-counter-input";
@@ -60,7 +60,7 @@ export default function FinalCheckOut() {
             setCards(data.data().paymentCards)
             dispatch(setNumberOfCartItems(final.reduce((sum,item,index) => (sum + (item.count)),0)))
             
-      
+    
 
    setTrial(cartItems.map((i,index) => (
     {
@@ -76,7 +76,7 @@ dispatch(setAuthenticaed(false))
                 setCartItems([])
             }
           
-        },5000)
+        },7000)
     return () => {
         setTrial([])
         setCartItems([])
@@ -109,7 +109,7 @@ dispatch(setAuthenticaed(false))
         <SafeAreaView style={{flex:1 , backgroundColor:'white'}}>
                  {loading && (
    <View style={{justifyContent:'center', alignItems:'center',height:HEIGHT}}>
-   <LottieView source={require('./assets/197-glow-loading.json')}  ref={lottieRef}     style={{
+   <LottieView source={require('../assets/197-glow-loading.json')}  ref={lottieRef}     style={{
 width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
        
      }}  />
@@ -157,7 +157,7 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
             }} style={{ paddingBottom:10 }}>
                 <View style={{flexDirection:'row', alignItems:'center', }}>
                     <Text style={{fontSize:22, fontWeight: '600',marginLeft:20,textTransform:'uppercase'}}>Delivery address</Text>
-                  
+                    <Ionicons name='add-circle-outline' size={28} style={{position:'absolute', right:0, marginRight:10, }} />
                 </View>
                </TouchableOpacity>    
           {address.length === 0 ?   <Text style={{fontWeight:'300', marginTop:10,marginLeft:20}}>No Address Saved Currently...</Text> : (
@@ -425,7 +425,7 @@ dispatch(setAuthenticaed(false))
             <ScrollView>
  {loading && (
    <View style={{justifyContent:'center', alignItems:'center',height:HEIGHT}}>
-   <LottieView source={require('./assets/197-glow-loading.json')}  ref={lottieRef}     style={{
+   <LottieView source={require('../assets/197-glow-loading.json')}  ref={lottieRef}     style={{
 width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
        
      }}  />
@@ -449,7 +449,10 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
             dispatch(setProductName(i.name))
               nav.navigate('Product')
               
-              }}>
+              }}
+              key={index}
+              
+              >
               <Image source ={{uri:i.image}} style={{width:WIDTH*0.3, height:HEIGHT*0.25, borderWidth:1, borderColor:'transparent',borderRadius:10}} />
             <View style={{marginLeft:10,width:WIDTH*0.5}}>
               

@@ -18,7 +18,7 @@ import InstaStory from 'react-native-insta-story';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DiscoverStack } from './Discover';
 import { useSelector, useDispatch } from 'react-redux';
-import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex } from './redux/actions';
+import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex } from '../redux/actions';
 import { BlurView } from 'expo-blur';
 import LottieView from 'lottie-react-native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -26,7 +26,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
 import HorizontalBarGraph from '@chartiful/react-native-horizontal-bar-graph'
-import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem } from './firebase';
+import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import {doc, setDoc, addDoc, getFirestore, collection} from 'firebase/firestore'
 import CounterInput from "react-native-counter-input";
@@ -41,7 +41,7 @@ import Payment from './Payment';
 const HEIGHT = Dimensions.get('window').height
 const WIDTH = Dimensions.get('window').width
 export default function CheckOut(){
-    const {click,cat,c,filter,tab,product,arrow,images,user,cart,yes,edit,price,duplicate} = useSelector(state => state.userReducer)
+    const {click,cat,c,filter,tab,product,arrow,images,user,cart,yes,edit,price,duplicate,sizeChoose,colorChoose} = useSelector(state => state.userReducer)
     const nav = useNavigation()
     const dispatch = useDispatch()
     const [loading,setLoading] = useState(false)
@@ -84,7 +84,7 @@ dispatch(setAuthenticaed(false))
 
  let final = cartItems.map((item,index) => (
         {
-            image:item.i, name:item.product, price: item.price, size:item.size, color:item.color, serial:1, count: item.count
+            image:item.i, name:item.product, price: item.price, size:item.sizeChoose, color:item.colorChoose, serial:1, count: item.count
         }
     ))
 const [newPrices,setNewPrices] = useState([])
@@ -170,7 +170,9 @@ const renderRightActions = (progress,id) => {
         } catch (error) {
               
           }
-      }}>
+      }}
+      key={id}
+      >
          <View>
              <Text style={{ fontWeight:'600',fontSize:18, color:'white',textTransform:'uppercase',alignSelf:'flex-start'}}>Delete</Text>
               <Ionicons name='trash' size={32} style={{alignSelf:'center',color:'white',marginTop:10}} />
@@ -185,7 +187,7 @@ const renderRightActions = (progress,id) => {
         <SafeAreaView style={{flex:1, backgroundColor:'white', }}>
             {loading && (
    <View style={{justifyContent:'center', alignItems:'center',height:HEIGHT}}>
-   <LottieView source={require('./assets/197-glow-loading.json')}  ref={lottieRef}     style={{
+   <LottieView source={require('../assets/197-glow-loading.json')}  ref={lottieRef}     style={{
 width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
        
      }}  />
@@ -250,6 +252,7 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
                     renderRightActions={(progress,id) =>
                        renderRightActions(progress, i.id)
                      }
+                     key={index}
                    >
                         <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginVertical:10}} onPress={() =>{ 
                           dispatch(setClicked(true))

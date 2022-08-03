@@ -16,8 +16,8 @@ import InstaStory from 'react-native-insta-story';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DiscoverStack } from './Discover';
 import { useSelector, useDispatch } from 'react-redux';
-import { setProductName,setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setDuplicatedIndex } from './redux/actions';
-import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,createFavorite } from './firebase';
+import { setProductName,setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setDuplicatedIndex } from '../redux/actions';
+import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,createFavorite } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import {doc, setDoc, addDoc, getFirestore, collection} from 'firebase/firestore'
 import { BlurView } from 'expo-blur';
@@ -32,15 +32,13 @@ export default function AllProducts(){
     const lottieRef = useRef()
     const[loading,setLoading] = useState(false)
     const[name,setName] = useState([])
-    const[tick1, setTick1] = useState(true)
-    const[tick2, setTick2] = useState(false)
-    const[tick3, setTick3] = useState(false)
-    const[tick4, setTick4] = useState(false)
+   const [filterCategoryClicked,setFilterCategoryClicked] = useState(1)
     const[favorite,setFavorite] = useState(false)
     const[clickAscendingPrice, setClickAscendingPrice] = useState(false)
-    const[arrangeAscendingPrice, setArrageAscendingPrice] = useState(false)
+    const[arrangeAscendingPrice, setArrangeAscendingPrice] = useState(false)
     const[clickDescendingPrice, setClickDescendingPrice] = useState(false)
     const[arrangeDescendingPrice,setArrangeDescendingPrice] = useState(false)
+    const [clickSaleItems,setClickSaleItems] = useState(false)
     const[getDiscount,setGetDiscount] = useState('')
     const[discountPrice,setDiscountPrice] = useState([])
     const [newInItems,setNewInItems] = useState([])
@@ -68,7 +66,7 @@ export default function AllProducts(){
             for(let key=0;key<50;key++){
                 let type = responseData[key].subcategory.toLowerCase()
                 let name = responseData[key].name.toLowerCase()
-                if(type === cat.toLowerCase() || name.slice(0,cat.length).indexOf(cat) !== -1){
+                if(type === cat.toLowerCase() || name.toString().slice(0,cat.length).indexOf(cat) !== -1){
                     if(arrangeAscendingPrice === true){
                           setPriceResults(prevResults => {
                         return [...prevResults, responseData[key].current_price ].sort(function(a,b) {
@@ -83,7 +81,7 @@ export default function AllProducts(){
                         })
                     } else if (getDiscount === 'SALE ITEMS'){
                         setDiscountPrice(prevResults => {
-                            return [...prevResults, (responseData[key].current_price * 0.5).slice(0,3)]
+                            return [...prevResults, (responseData[key].current_price * 0.2)]
                         })
                         setPriceResults(prev => {
                             return [...prev, responseData[key].current_price]
@@ -123,7 +121,7 @@ export default function AllProducts(){
       
         },15000)
         
-        
+        console.log(priceResults)
     },[c,])
     let final = priceResults.map((i,index) => (
         {
@@ -133,11 +131,15 @@ export default function AllProducts(){
 const[scrollOffset,setScrollOffset] = useState(0)
     const findItems = () => {
         if(clickAscendingPrice === true){
-            setArrageAscendingPrice(true)
+            setArrangeAscendingPrice(true)
                     dispatch(setClicked(true))
                     dispatch(setFilter(false))
         } else if (clickDescendingPrice === true){
             setArrangeDescendingPrice(true)
+            dispatch(setClicked(true))
+            dispatch(setFilter(false))
+        } else if (clickSaleItems === true){
+            setGetDiscount('SALE ITEMS')
             dispatch(setClicked(true))
             dispatch(setFilter(false))
         }
@@ -184,50 +186,22 @@ const[scrollOffset,setScrollOffset] = useState(0)
 
 
     const[headerVisible,setHeaderVisible] = useState(false)
-  console.log(discountPrice)
+ 
     
     return(
    <View style={{flex:1, backgroundColor:'white'}}>
-        {!c  && (
-            <FlatList 
-               data={selectedTabs}
-               renderItem={({item,index}) => {
-                   return(
-                    <TouchableOpacity style={{borderWidth:1,borderColor:item.selected ? 'transparent' : 'lightgrey',  marginHorizontal:15,marginTop:20,justifyContent:'center',flex:1,padding:10,borderRadius:5,backgroundColor:item.selected ? 'rgba(172,172,172,.4)': 'white'}}
-                    onPress={() => {
-                        setGetDiscount(item.title)
-                        dispatch(setClicked(true))
-                        updateOnPress(index)
-                    }}
-                    >
-                        <Text style={{fontSize:16, fontWeight:'600',alignSelf:'center',padding:10, bottom:5}}>{item.title}</Text>
-                    </TouchableOpacity>
-           
-                   )
-               }}
-               horizontal
-               pagingEnabled={true}
-               showsHorizontalScrollIndicator={false}
-               legacyImplementation={false}
-               style={{width:WIDTH + 5, marginLeft:8,}}
-               keyExtractor={(item) => item.id}
-
-               />
-        )}  
+        
 
         {c && (
           <View style={{justifyContent:'center', alignItems:'center',height:HEIGHT}}>
-          <LottieView source={require('./assets/197-glow-loading.json')}  ref={lottieRef}     style={{
+          <LottieView source={require('../assets/197-glow-loading.json')}  ref={lottieRef}     style={{
       width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
               
             }}  />
          
       </View>  
         )}
-       {!c && (
-<Text style={{alignSelf:'center', marginTop:15, fontSize:20, }}>{priceResults.length} items found</Text>
-
-       )} 
+       
         <FlatList 
         data={final}
         renderItem={renderItem}
@@ -262,96 +236,67 @@ const[scrollOffset,setScrollOffset] = useState(0)
             <Text style={{fontSize:28, fontWeight:'600', alignSelf:'center', textAlign:'center', marginLeft:5}}>Filter</Text>
         <TouchableOpacity style ={{position:'absolute', right:0, marginRight:20}} 
          onPress={() => {
-            setTick3(false)
-            setTick1(true)
-            setTick2(false)
-            setTick4(false)
+            setFilterCategoryClicked(1)
         }}
         >
-            <Text style={{fontSize:20, fontWeight:tick2 || tick3 || tick4 ? '700' : '200'}}>Clear All</Text>
+            <Text style={{fontSize:20, fontWeight:filterCategoryClicked !== 1 ? '700' : '200'}}>Clear All</Text>
         </TouchableOpacity>
             </View>
             <View >
                 <Text style={{marginLeft:20, fontSize:26, fontWeight:'bold',marginTop:20}}>Sort By</Text>
                 <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
                 onPress={() => {
-                    setTick3(false)
-                    setTick1(true)
-                    setTick2(false)
-                    setTick4(false)
+                    setFilterCategoryClicked(1)
                 }}
                 >
                     <Text style={{fontSize:20, fontWeight:'400', }}>Recommended (All) </Text>
-                    <Feather name='check-square' size={24} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, opacity:tick1 ? 1: 0 }} />
+                    <Feather name='check-square' size={24} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, opacity:filterCategoryClicked === 1 ? 1: 0 }} />
                 </TouchableOpacity>
                 <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
                 onPress={() => {
-                    setTick2(true)
-                    setTick1(false)
-                    setTick3(false)
-                    setTick4(false)
+                    setFilterCategoryClicked(2)
                 }}
                 >
                     <Text style={{fontSize:20, fontWeight:'400', }}>New Items</Text>
-                    <Feather name='check-square' size={24} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, opacity:tick2 ? 1 : 0 }} />
+                    <Feather name='check-square' size={24} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, opacity:filterCategoryClicked === 2 ? 1 : 0 }} />
                 </TouchableOpacity>
                 <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
                 onPress={() => {
-                    setTick3(true)
-                    setTick1(false)
-                    setTick2(false)
-                    setTick4(false)
+                    setFilterCategoryClicked(3)
                       setClickAscendingPrice(true)
                 }}
                 >
                     <Text style={{fontSize:20, fontWeight:'400', }}>Price (Low To High)</Text>
-                    <Feather name='check-square' size={24} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, opacity:tick3 ? 1 : 0 }} />
+                    <Feather name='check-square' size={24} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, opacity:filterCategoryClicked === 3 ? 1 : 0 }} />
                 </TouchableOpacity>
                 <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
                 onPress = {() => {
-                    setTick3(false)
-                    setTick1(false)
-                    setTick2(false)
-                    setTick4(true)
+                    setFilterCategoryClicked(4)
                     setClickDescendingPrice(true)
                 }}
                 >
                     <Text style={{fontSize:20, fontWeight:'400', }}>Price (High To Low)</Text>
-                    <Feather name='check-square' size={24} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, opacity:tick4 ? 1 : 0 }} />
+                    <Feather name='check-square' size={24} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, opacity:filterCategoryClicked === 4 ? 1 : 0 }} />
+                </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
+                onPress = {() => {
+                    setFilterCategoryClicked(5)
+                    setClickSaleItems(true)
+                }}
+                >
+                    <Text style={{fontSize:20, fontWeight:'400', }}>SALE ITEMS !!</Text>
+                    <Feather name='check-square' size={24} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, opacity:filterCategoryClicked === 5 ? 1 : 0 }} />
                 </TouchableOpacity>
             </View>
             <View>
             <Text style={{marginLeft:20, fontSize:26, fontWeight:'bold',marginTop:20}}>Filter By</Text>
-            <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
-                
-                >
-                    <Text style={{fontSize:20, fontWeight:'400', }}>Categories</Text>
-                    <Feather name='chevrons-right' size={26} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, }} />
-                </TouchableOpacity>
-                <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
-                
-                >
-                    <Text style={{fontSize:20, fontWeight:'400', }}>Colors</Text>
-                    <Feather name='chevrons-right' size={26} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, }} />
-                </TouchableOpacity>
-                <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
-                
-                >
-                    <Text style={{fontSize:20, fontWeight:'400', }}>Sizes</Text>
-                    <Feather name='chevrons-right' size={26} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, }} />
-                </TouchableOpacity>
-                <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
-                
-                >
-                    <Text style={{fontSize:20, fontWeight:'400', }}>Price Range</Text>
-                    <Feather name='chevrons-right' size={26} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, }} />
-                </TouchableOpacity>
-                <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
-                
-                >
-                    <Text style={{fontSize:20, fontWeight:'400', }}>Sale Discount</Text>
-                    <Feather name='chevrons-right' size={26} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, }} />
-                </TouchableOpacity>
+            
+            
+            <FlatList 
+            data={filterCategories}
+            renderItem={renderFilterCategories}
+            
+            />
                 
             </View>
             <View style={{position:'absolute', bottom:60, alignSelf:'center'}}>
@@ -371,91 +316,51 @@ const[scrollOffset,setScrollOffset] = useState(0)
     )
 }
 
-const data = [{
+
+
+const filterCategories = [
+    {
     id:"1",
-    title:"ALL"
+    title:"Categories",
+
 },
 {
     id:"2",
-    title:" NEW IN"
+    title:"Colors",
+    
 },
 {
     id:"3",
-    title:" SALE ITEMS"
+    title:"Categories",
+    
 },
 {
     id:"4",
-    title:"POPULAR"
+    title:"Price Range",
+    
 },
-{
-    id:"5",
-    title:"COLLECTION VI"
-},
-{
-    id:"6",
-    title:"COLLECTION VII"
-}
-
-
 
 ]
-const renderHeader = ({item}) => {
+const FilterCategories = ({title}) => {
     return(
-        <HeaderItem title={item.title} index={item.id} selected={item.selected}/>
+        <TouchableOpacity style={{flexDirection:'row', alignItems:'center', marginTop:20,  marginLeft:20, borderBottomColor:'rgba(220,220,220,0.2)', borderBottomWidth:1,paddingBottom:10}}
+                
+        >
+            <Text style={{fontSize:20, fontWeight:'400', }}>{title}</Text>
+            <Feather name='chevrons-right' size={26} style={{position:'absolute', right:0,paddingBottom:10,marginRight:20, }} />
+        </TouchableOpacity>
     )
 }
-const HeaderItem = ({title,index,selected    }) => {
-    const {click,cat,c,filter,tab} = useSelector(state => state.userReducer)
-    const [selectedTabs,setSelectedTabs] = useState([{
-        id:"1",
-        title:"ALL"
-    },
-    {
-        id:"2",
-        title:" NEW IN"
-    },
-    {
-        id:"3",
-        title:"SALE ITEMS"
-    },
-    {
-        id:"4",
-        title:"POPULAR"
-    },
-    {
-        id:"5",
-        title:"COLLECTION VI"
-    },
-    {
-        id:"6",
-        title:"COLLECTION VII"
-    }
-    
-    
-    
-    ])
-    const updateOnPress = (index) => {
-        const categories = selectedTabs.map((item) => {
-            item.selected = false;
-            return item;
-          });
-          categories[index].selected = true;
-          setSelectedTabs(categories);
-    
-    }
-    const dispatch = useDispatch()
 
-    return(
-  
-            <TouchableOpacity style={{borderWidth:1,borderColor:'lightgrey',  marginHorizontal:15,marginTop:20,justifyContent:'center',flex:1,padding:10,borderRadius:5,backgroundColor:selected ? 'rgb(255,248,220)': 'white'}}
-            onPress={() => updateOnPress(index)}
-            >
-                <Text style={{fontSize:16, fontWeight:'600',alignSelf:'center',padding:10, bottom:5}}>{title}</Text>
-            </TouchableOpacity>
-   
+const renderFilterCategories = ({item}) => {
+    return (
+        <FilterCategories title={item.title} />
     )
 }
-const Item = ({image,price,name,discount}) => {
+
+
+
+const Item = ({image,price,name,discount,index}) => {
     const {click,cat,c,filter,tab,product,user} = useSelector(state => state.userReducer)
     const nav = useNavigation()
     const dispatch = useDispatch()
@@ -480,8 +385,8 @@ const Item = ({image,price,name,discount}) => {
 
     }
     return(
-        <View>
-       <TouchableOpacity style={{width:WIDTH*0.467,height:HEIGHT*0.36, marginTop:10,zIndex:10,}}
+        <View style={{marginTop:40,position: 'relative'}}>
+       <TouchableOpacity style={{width:WIDTH*0.467,height:350,zIndex:10,transform:[{translateY: index % 2 === 0 ?  0 : -20}] }}
        onPress = {() => {
            dispatch(setProductName(name))
            dispatch(setClicked(true))
@@ -489,28 +394,33 @@ const Item = ({image,price,name,discount}) => {
        }}
        
        >
-            <Image source={{uri:image}} style={{width:'90%', height:'75%'}}/>
-               <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center',width:'90%',alignContent:'space-between'}}>
-                <View>
-               {discount && (
-                       <Text style={{fontSize:20, fontWeight:'700',marginTop:10,color:'red'}}>$ {discount}</Text>
-               )}
-                <Text style={{fontSize:20, fontWeight:'700',textDecorationLine:discount ? 'line-through' : 'none',marginTop:5}}>${price}</Text>
+            <Image source={{uri:image}} style={{width:'90%', height:'90%',borderWidth:1, borderRadius:15,borderColor:'transparent'}}/>
+              
+            
+                <TouchableOpacity style={{position:'absolute', right:20, top:5,backgroundColor:'white',padding:8,border:1, borderRadius:'50%'}}
+                onPress={addToFavorite}
+                >
+                <Ionicons name={favorite ? 'heart' : 'heart-outline'} size={26} color={favorite ? 'red' : 'black'}  
+                
+                />
+               </TouchableOpacity>
+                <Text style={{fontSize:16, width:'90%',marginTop:5}}>{name ? name.slice(0,20) : ''}</Text>
+                <View style={{flexDirection:'row',alignItems:'center',}}>
+              
+                <Text style={{fontSize:18, fontWeight:'600',textDecorationLine:discount ? 'line-through' : 'none',}}>${price}</Text> 
+                {discount && (
+                       <Text style={{fontSize:20, fontWeight:'700',color:'red',marginLeft:10}}>$ {discount}</Text>
+               )  } 
+              
 
                 </View>
-                
-                <Ionicons name={favorite ? 'heart' : 'heart-outline'} size={26} color={favorite ? 'red' : 'black'} style={{position:'absolute', right:0, top:2}} 
-                onPress={addToFavorite}
-                />
-               </View>
-                <Text style={{fontSize:16, width:'90%',paddingBottom:20,marginTop:5}}>{name}</Text>
             </TouchableOpacity>
         </View>
     )
 }
-const renderItem = ({item}) => {
+const renderItem = ({item,index}) => {
     return(
-        <Item image={item.image} price={item.price} name={item.name} discount={item.discount} />
+        <Item image={item.image} price={item.price} name={item.name} discount={item.discount} index ={index}  />
     )
 }
 const styles = StyleSheet.create({

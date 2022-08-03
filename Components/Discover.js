@@ -11,9 +11,9 @@ import InstaStory from 'react-native-insta-story';
 import SearchPage from './SearchPage';
 import Entypo from 'react-native-vector-icons/Entypo'
 import { useSelector, useDispatch } from 'react-redux';
-import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setDuplicatedIndex } from './redux/actions';
+import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setDuplicatedIndex } from '../redux/actions';
 import AllProducts from './AllProducts';
-import ProductScreen from './ProductScreen';
+import ProductScreen from './ProductStuff.js/ProductScreen';
 import SizeGuide from './SizeGuide';
 const Tab = createBottomTabNavigator();
 
@@ -271,31 +271,31 @@ click={click}
     
             <Text style={{ fontSize:20, fontWeight:'700',textTransform:'uppercase', marginLeft:10,left:0}}>NEW IN</Text>
        
-    <Image source={require('./photo1652966477.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}]}} />
+    <Image source={require('../assets/photo1652966477.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}]}} />
     </TouchableOpacity>
     <TouchableOpacity style={{ flexDirection:'row', alignItems:'center', marginTop:20,  marginHorizontal:10, backgroundColor:'rgba(220,220,220,0.3)', borderWidth:1,paddingBottom:10,height:HEIGHT*0.15,borderColor:'transparent',zIndex:10}}>
     
     <Text style={{ fontSize:20, fontWeight:'700',textTransform:'uppercase', marginLeft:10,left:0}}>Collections</Text>
 
-<Image source={require('./photo1652968228.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}]}} />
+<Image source={require('../assets/photo1652968228.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}]}} />
 </TouchableOpacity>
 <TouchableOpacity style={{ flexDirection:'row', alignItems:'center', marginTop:20,  marginHorizontal:10, backgroundColor:'rgba(220,220,220,0.3)', borderWidth:1,paddingBottom:10,height:HEIGHT*0.15,borderColor:'transparent',zIndex:10}}>
     
     <Text style={{ fontSize:20, fontWeight:'700',textTransform:'uppercase', marginLeft:10,left:0}}>Clothing</Text>
 
-<Image source={require('./photo1652968146.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}], }} />
+<Image source={require('../assets/photo1652968146.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}], }} />
 </TouchableOpacity>
 <TouchableOpacity style={{ flexDirection:'row', alignItems:'center', marginTop:20,  marginHorizontal:10, backgroundColor:'rgba(220,220,220,0.3)', borderWidth:1,paddingBottom:10,height:HEIGHT*0.15,borderColor:'transparent',zIndex:10}}>
     
     <Text style={{ fontSize:20, fontWeight:'700',textTransform:'uppercase', marginLeft:10,left:0}}>Sale Items</Text>
 
-<Image source={require('./123.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}],resizeMode:'contain'}} />
+<Image source={require('../assets/123.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}],resizeMode:'contain'}} />
 </TouchableOpacity>
 <TouchableOpacity style={{ flexDirection:'row', alignItems:'center', marginTop:20,  marginHorizontal:10, backgroundColor:'rgba(220,220,220,0.3)', borderWidth:1,paddingBottom:10,height:HEIGHT*0.15,borderColor:'transparent',zIndex:10}}>
     
     <Text style={{ fontSize:20, fontWeight:'700',textTransform:'uppercase', marginLeft:10,left:0}}>Dresses</Text>
 
-<Image source={require('./photo1652966591.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}]}} />
+<Image source={require('../assets/photo1652966591.png')} style={{width:'30%', height:'100%', position:'absolute',right:0, transform:[{scale:1.1}]}} />
 </TouchableOpacity>
 </ScrollView>
  </SafeAreaView>
@@ -422,12 +422,12 @@ export const DiscoverStack = () => {
             <Stack.Screen name = {`${cat} page`} options={{
              headerBackTitleVisible:false,
                 
-                headerLeft: () => (<Ionicons name='arrow-back-outline' size={32} color={'black'} style={{position:'absolute'}} onPress={() => nav.navigate('Search')}  />),
+                headerLeft: () => (<Ionicons name='arrow-back-outline' size={32} color={'black'} style={{position:'absolute',left:-10}} onPress={() => nav.navigate('Search')}  />),
                 headerTitle:`${cat}`.toUpperCase(),
                 headerTitleStyle:{
                     textTransform:'uppercase'
                 },
-                headerRight: () => (<Ionicons name='filter-outline' size={32} color={'black'} style={{position:'absolute',marginRight:20}} onPress={() => dispatch(setFilter(true))} />)
+                headerRight: () => (<Ionicons name='filter-outline' size={32} color={'black'} style={{position:'absolute',right:-5}} onPress={() => dispatch(setFilter(true))} />)
                 
             }}  component={AllProducts} />
             <Stack.Screen name='Product Details' component={ProductScreen} options={{

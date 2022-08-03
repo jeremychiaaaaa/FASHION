@@ -17,7 +17,7 @@ import InstaStory from 'react-native-insta-story';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DiscoverStack } from './Discover';
 import { useSelector, useDispatch } from 'react-redux';
-import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex,setChangeAddress,setSelectedAddress } from './redux/actions';
+import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex,setChangeAddress,setSelectedAddress } from '../redux/actions';
 import { BlurView } from 'expo-blur';
 import LottieView from 'lottie-react-native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -25,7 +25,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
 import HorizontalBarGraph from '@chartiful/react-native-horizontal-bar-graph'
-import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,getAddress } from './firebase';
+import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,getAddress } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import {doc, setDoc, addDoc, getFirestore, collection, } from 'firebase/firestore'
 import CounterInput from "react-native-counter-input";
@@ -46,7 +46,7 @@ export default function Transaction({navigation}){
                           </View>
  <Text style={{marginTop:40, alignSelf:'center',fontSize:32, fontWeight:'600', transform:[{translateY:30}]}}>Transaction Success !</Text>
             <View style={{marginTop:10, width:WIDTH, height:HEIGHT*0.35, justifyContent:'center'}}>
-                <LottieView source={require('./assets/100563-add-to-product.json')} autoPlay loop />
+                <LottieView source={require('../assets/100563-add-to-product.json')} autoPlay loop />
             </View>
  
                 <Text style={{alignSelf:'center', fontWeight:'300', fontSize:18, marginHorizontal:25,textAlign:'center'}}>

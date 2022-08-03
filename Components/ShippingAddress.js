@@ -17,7 +17,7 @@ import InstaStory from 'react-native-insta-story';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DiscoverStack } from './Discover';
 import { useSelector, useDispatch } from 'react-redux';
-import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex } from './redux/actions';
+import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex } from '../redux/actions';
 import { BlurView } from 'expo-blur';
 import LottieView from 'lottie-react-native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -25,7 +25,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
 import HorizontalBarGraph from '@chartiful/react-native-horizontal-bar-graph'
-import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,createShipping } from './firebase';
+import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,createShipping } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import {doc, setDoc, addDoc, getFirestore, collection} from 'firebase/firestore'
 import CounterInput from "react-native-counter-input";

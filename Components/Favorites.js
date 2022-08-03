@@ -6,9 +6,9 @@ import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex } from './redux/actions';
+import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex } from '../redux/actions';
 import { useSelector, useDispatch } from 'react-redux';
-import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,getFavoriteItems,deleteFavoriteItem } from './firebase';
+import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,getFavoriteItems,deleteFavoriteItem } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import {doc, setDoc, addDoc, getFirestore, collection} from 'firebase/firestore'
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -34,7 +34,7 @@ export default function Favorites({navigation}){
   const [viewSizes, setViewSizes] = useState(false)
   const[selectedIndex, setSelectedIndex] = useState(-1)
   const [modalVisible, setModalVisible] = useState(false)
-  const [colorModalVisibe,setColorModalVisible] = useState(false)
+  const [colorModalVisible,setColorModalVisible] = useState(false)
   const[cartItems,setCartItems] = useState([])
   const [color,setColor] = useState('black')
   const[addingToCart,setAddingToCart] = useState(false)
@@ -42,7 +42,7 @@ export default function Favorites({navigation}){
     const dispatch = useDispatch()
     const addToCartRef = useRef()
       const nav = useNavigation()
-    const {user,modal,yes} = useSelector(state => state.userReducer)
+    const {user,modal,yes,} = useSelector(state => state.userReducer)
     const [loading,setLoading] = useState(false)
     const [favoriteItems, setFavoriteItems] = useState([])
     const lottieRef = useRef()
@@ -74,7 +74,7 @@ dispatch(setAuthenticaed(false))
 
     let final = favoriteItems.map((item,index) => (
         {
-            image: item.image, price: item.price, product:item.name, 
+            image: item.images[0], price: item.price, product:item.product, 
         }
     ))
 console.log(sizee)
@@ -110,9 +110,9 @@ const addToBag = async () => {
                 setAddingToCart(true)
                 addToCartRef.current?.play()
 
-      let a={size,color,i,product,price,count}
-      let size = sizee[selectedIndex].size
-      let color = sizee[selectedIndex].color
+      let a={sizeChoose,colorChoose,i,product,price,count}
+      let sizeChoose = sizee[selectedIndex].size
+      let colorChoose = sizee[selectedIndex].color
       let count=1
       let i = favoriteItems[selectedIndex].image
       let price = favoriteItems[selectedIndex].price
@@ -121,10 +121,10 @@ const addToBag = async () => {
       console.log(product)
       let duplicated;
              let temp = []
-      if(color !== 'Color' && size !== 'Size'){
-         if(cartItems.map(item => item.size).indexOf(a.size) !== -1 && cartItems.map(item => item.product).indexOf(a.product) !== -1 && cartItems.map(item => item.color).indexOf(a.color) !== -1  ){
+      if(colorChoose !== 'Color' && sizeChoose !== 'Size'){
+         if(cartItems.map(item => item.sizeChoose).indexOf(a.sizeChoose) !== -1 && cartItems.map(item => item.product).indexOf(a.product) !== -1 && cartItems.map(item => item.colorChoose).indexOf(a.colorChoose) !== -1  ){
        cartItems.forEach( (i,serial) => {
-           if(i.size === a.size && i.product === a.product && i.color === a.color){
+           if(i.sizeChoose === a.sizeChoose && i.product === a.product && i.colorChoose === a.colorChoose){
                dispatch(setDuplicatedIndex(serial))
                i.count = i.count + 1
              
@@ -141,7 +141,7 @@ const addToBag = async () => {
        } else {
      
      
-         a = {size,color,i,product,price,count}
+         a = {sizeChoose,colorChoose,i,product,price,count}
         temp.push(a)
         await createCart(user,{temp})
         setAddingToCart(false)
@@ -149,11 +149,11 @@ const addToBag = async () => {
         dispatch(setAuthenticaed(true))   
        }
            
-      } else if (color !== 'Color' && size === 'Size') {
+      } else if (colorChoose !== 'Color' && sizeChoose === 'Size') {
         setModalVisible(true)
         setAddingToCart(true)
         setColorModalVisible(false)
-      } else if (color === 'Color' && size !== 'Size') {
+      } else if (colorChoose === 'Color' && sizeChoose !== 'Size') {
         setModalVisible(true)
         setAddingToCart(true)
       setViewSizes(false)
@@ -218,7 +218,7 @@ const renderRightActions = (progress,id) => {
         <SafeAreaView style={{flex:1, backgroundColor:'white',justifyContent:'center'}}>
             {loading && (
    <View style={{justifyContent:'center', alignItems:'center',height:HEIGHT}}>
-   <LottieView source={require('./assets/197-glow-loading.json')}  ref={lottieRef}     style={{
+   <LottieView source={require('../assets/197-glow-loading.json')}  ref={lottieRef}     style={{
 width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
        
      }}  />
@@ -298,7 +298,7 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
                           <Text style={{fontSize:20, fontWeight:'600', alignSelf:'flex-start',marginVertical:10}}>$ {i.price}</Text>
                   <Text style={{width:WIDTH*0.45, fontWeight:'300', fontSize:18,marginBottom:15}}>{i.product}</Text> 
                   <View style={{flexDirection:'row',alignItems:'center', }}>
-                      <TouchableOpacity style={{width:'55%',justifyContent:'center', borderRightWidth:1, borderRightColor:'lightgrey'}}
+                      <TouchableOpacity style={{width:'55%', borderRightWidth:1, borderRightColor:'lightgrey',flexDirection:'row',alignItems:'flex-start',justifyContent:'flex-start'}}
                       onPress={ () => {
                         setSelectedIndex(index)
                        console.log(selectedIndex)
@@ -308,7 +308,8 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
                       }}
                       
                       >
-                          <Text style={{alignSelf:'flex-start',fontSize:16, fontWeight:'300', }}>{sizee.map((item,num) => item.id === index && <Text>{item.color}</Text>)}</Text>
+                          <Text style={{alignSelf:'center',fontSize:16, fontWeight:'300', }}>{sizee.map((item,num) => item.id === index && <Text>{item.color}</Text>)}</Text>
+                         
                       </TouchableOpacity>
                         
                       <TouchableOpacity style={{width:'40%',justifyContent:'center'}}
@@ -332,7 +333,7 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
                    </TouchableOpacity>
                    {addingToCart && (
             <View style={{justifyContent:'center', alignItems:'center',height:50,}}>
-            <LottieView source={require('./assets/197-glow-loading.json')}  ref={addToCartRef}     style={{
+            <LottieView source={require('../assets/197-glow-loading.json')}  ref={addToCartRef}     style={{
         width:'30%', zIndex:10,alignSelf:'center', height:50
                 
               }}  /> 
@@ -361,7 +362,7 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
       >
         <View  style={{width:WIDTH, height:HEIGHT*0.5}}>
           <View style={{backgroundColor:'white', flexDirection:'row'}}>
-         <TouchableOpacity style={{width:WIDTH*0.4, paddingBottom:15, borderBottomWidth:1, borderBottomColor:colorModalVisibe ? 'blue' : 'transparent',justifyContent:'center',marginLeft:20}}
+         <TouchableOpacity style={{width:WIDTH*0.4, paddingBottom:15, borderBottomWidth:1, borderBottomColor:colorModalVisible ? 'blue' : 'transparent',justifyContent:'center',marginLeft:20}}
          onPress={
            () => {
             setColorModalVisible(true)
@@ -382,7 +383,7 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
            <Text style={{alignSelf:'center',  marginTop:15}}>Select Size</Text>
          </TouchableOpacity>
        </View>
-          {colorModalVisibe && (
+          {colorModalVisible && (
         <View 
         style={{width:WIDTH, height:HEIGHT*0.5}}
         
@@ -399,7 +400,7 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
       <Text style={{alignSelf:'center', fontWeight:'500',fontSize:20,paddingBottom:10,marginTop:10}}> Select Color</Text>
         <ScrollView style={{  }}>
        
-         <Image source={{uri: selectedIndex !== -1 ? favoriteItems[selectedIndex].image : ''}}   style={{width:WIDTH, height:HEIGHT*0.25,}} />
+         <Image source={{uri: selectedIndex !== -1 ? favoriteItems[selectedIndex].images[0] : ''}}   style={{width:WIDTH, height:HEIGHT*0.25,}} />
 
      
         <View style={{flexDirection:'row',  marginTop:10,marginLeft:20,alignItems:'center'}}>

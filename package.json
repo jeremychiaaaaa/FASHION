@@ -74,5 +74,16 @@
   "devDependencies": {
     "@babel/core": "^7.12.9"
   },
-  "private": true
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeremychiaaaaa/ecomerce-app-.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeremychiaaaaa/ecomerce-app-/issues"
+  },
+  "homepage": "https://github.com/jeremychiaaaaa/ecomerce-app-#readme",
+  "description": ""
 }

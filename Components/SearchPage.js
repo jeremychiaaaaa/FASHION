@@ -12,12 +12,12 @@ import Favorites from './Favorites';
 import Profile from './Profile';
 import { SliderBox } from "react-native-image-slider-box";
 import { useSelector, useDispatch } from 'react-redux';
-import { setSearchClicked,setClicked,setFilter } from './redux/actions';
+import { setSearchClicked,setClicked,setFilter,setTab,setCategoryClicked } from '../redux/actions';
 import Slideshow from 'react-native-slideshow-improved';
 import TimedSlideshow from 'react-native-timed-slideshow';
 import InstaStory from 'react-native-insta-story';
 import { LinearGradient } from 'expo-linear-gradient';
-import { setCategoryClicked,setTab } from './redux/actions';
+
 const Tab = createBottomTabNavigator();
 const HEIGHT = Dimensions.get('window').height
 const WIDTH = Dimensions.get('window').width

@@ -4,14 +4,14 @@ import { Formik } from 'formik'
 import * as Yup from 'yup';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import LogIn from './LogIn';
-import firebase, { createUserDocument } from './firebase';
+import firebase, { createUserDocument } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import {doc, setDoc, addDoc, getFirestore, collection} from 'firebase/firestore'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setUser,setSignUp } from './redux/actions';
+import { setUser,setSignUp } from '../redux/actions';
 
 
 const {width, height} = Dimensions.get('window')

@@ -1,4 +1,4 @@
-import { SET_SEARCH_CLICKED,SET_USER_OBJECT, SET_CATEGORY_CLICKED,SET_ALL_PRODUCTS,SET_FILTER_VISIBLE,SET_TAB,SET_PRODUCT_NAME,SET_ARROW_ROTATE,SET_IMAGE_CLICKED,SET_SIGN_UP_VISIBLE,SET_NUMBER_CART_ITEMS,SET_ADD_ITEM,SET_AUTHENTICATED_USER, SET_INDEX_EDIT, SET_PRICE_EDIT, SET_DUPLICATED_INDEX,SET_UPDATED_ADDRESS,SET_SELECTED_ADDRESS,SET_REVIEW_ADDED } from "./actions";
+import { SET_SEARCH_CLICKED,SET_SIZE_CHOOSE,SET_COLOR_CHOOSE,SET_USER_OBJECT, SET_CATEGORY_CLICKED,SET_ALL_PRODUCTS,SET_FILTER_VISIBLE,SET_TAB,SET_PRODUCT_NAME,SET_ARROW_ROTATE,SET_IMAGE_CLICKED,SET_SIGN_UP_VISIBLE,SET_NUMBER_CART_ITEMS,SET_ADD_ITEM,SET_AUTHENTICATED_USER, SET_INDEX_EDIT, SET_PRICE_EDIT, SET_DUPLICATED_INDEX,SET_UPDATED_ADDRESS,SET_SELECTED_ADDRESS,SET_REVIEW_ADDED } from "./actions";
 
 const initialState = {
     click:false,
@@ -19,7 +19,9 @@ const initialState = {
     duplicate:-1,
     change:false,
     select:0,
-    reviewAdded:false
+    reviewAdded:false,
+    colorChoose:'black',
+    sizeChoose:'XS'
 }
 
 export default function userReducer(state=initialState,action){
@@ -62,6 +64,10 @@ export default function userReducer(state=initialState,action){
                                         return{...state, select: action.payload}
                                         case SET_REVIEW_ADDED:
                                             return{...state, reviewAdded: action.payload}
+                                            case SET_COLOR_CHOOSE:
+                                                return{...state, colorChoose: action.payload}
+                                                case SET_SIZE_CHOOSE:
+                                                return{...state, sizeChoose: action.payload}
             default:
                 return state
     }

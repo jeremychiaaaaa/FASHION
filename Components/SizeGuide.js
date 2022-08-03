@@ -14,7 +14,7 @@ import Slideshow from 'react-native-slideshow-improved';
 import TimedSlideshow from 'react-native-timed-slideshow';
 import InstaStory from 'react-native-insta-story';
 import { useSelector, useDispatch } from 'react-redux';
-import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages } from './redux/actions';
+import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages } from '../redux/actions';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DiscoverStack } from './Discover';
 import { DataTable } from 'react-native-paper';

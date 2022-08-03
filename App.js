@@ -5,22 +5,22 @@ import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LandingPage from './LandingPage';
-import HomePage from './HomePage';
+import { HomeStack } from './Components/HomeStack';
+import HomePage from './Components/HomePage';
 import { Provider } from 'react-redux';
 import { Store } from './redux/store';
-import { HomeStack } from './HomePage';
-import SignUp from './SignUp';
-import SignUpStack from './SignUp';
-import LogIn from './LogIn';
-import ProductScreen from './ProductScreen';
-import ModalProductScreen from './ModalProductScreen';
-import SizeGuide from './SizeGuide';
-import ViewOrders from './ViewOrders'
-import { ModalNavigator } from './Favorites';
-import Transaction from './Transaction';
-import AddReview from './AddReview';
-import { ViewAllItems } from './AddReview';
+
+import SignUp from './Components/SignUp';
+import SignUpStack from './Components/SignUp';
+import LogIn from './Components/LogIn';
+import ProductScreen from './Components/ProductStuff.js/ProductScreen';
+import ModalProductScreen from './Components/ModalProductScreen';
+import SizeGuide from './Components/SizeGuide';
+import ViewOrders from './Components/ViewOrders'
+import { ModalNavigator } from './Components/Favorites';
+import Transaction from './Components/Transaction';
+import AddReview from './Components/AddReview';
+import { ViewAllItems } from './Components/AddReview';
 const Stack = createNativeStackNavigator()
 
 export default function App({navigation}) {
@@ -35,7 +35,7 @@ export default function App({navigation}) {
          headerShown:false
        }}
        />
-       <Stack.Screen name ='LAnding' component={LandingPage} options={{headerShown:false}} />
+      
        <Stack.Screen name='Product' component={ProductScreen} options={{
          headerShown:false
        }}/>

@@ -17,6 +17,9 @@ export const SET_DUPLICATED_INDEX = 'SET_DUPLICATED_INDEX'
 export const SET_UPDATED_ADDRESS = 'SET_UPDATED_ADDRESS'
 export const SET_SELECTED_ADDRESS = 'SET_SELECTED_ADDRESS'
 export const SET_REVIEW_ADDED = 'SET_REVIEW_ADDED'
+export const SET_COLOR_CHOOSE = 'SET_COLOR_CHOOSE'
+export const SET_SIZE_CHOOSE = 'SET_SIZE_CHOOSE'
+
 export const setSearchClicked = click => dispatch => {
     dispatch({ type:SET_SEARCH_CLICKED,
     payload:click})
@@ -135,5 +138,17 @@ export const setReviewAdded = reviewAdded => dispatch => {
     dispatch({
         type:SET_REVIEW_ADDED,
         payload:reviewAdded
+    })
+}
+export const setColorChoose = colorChoose => dispatch => {
+    dispatch({
+        type:SET_COLOR_CHOOSE,
+        payload:colorChoose
+    })
+}
+export const setSizeChoose = sizeChoose => dispatch => {
+    dispatch({
+        type:SET_SIZE_CHOOSE,
+        payload:sizeChoose
     })
 }

@@ -18,7 +18,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { DiscoverStack } from './Discover';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStorage, ref, uploadBytes,getDownloadURL } from "firebase/storage";
-import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex,setChangeAddress,setSelectedAddress,setReviewAdded } from './redux/actions';
+import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex,setChangeAddress,setSelectedAddress,setReviewAdded } from '../redux/actions';
 import { BlurView } from 'expo-blur';
 import LottieView from 'lottie-react-native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -26,7 +26,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
 import HorizontalBarGraph from '@chartiful/react-native-horizontal-bar-graph'
-import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,getAddress,createOrder,createReview } from './firebase';
+import firebase, { createUserDocument,createCart,getCartItems,updateCartItem,deleteCartItem,getAddress,createOrder,createReview } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 import {doc, setDoc, addDoc, getFirestore, collection} from 'firebase/firestore'
 import CounterInput from "react-native-counter-input";
@@ -87,7 +87,7 @@ dispatch(setAuthenticaed(false))
     },[yes])
     let final = cartItems.filter((i,index) => index === duplicate).map((item,index) => (
         {
-            image:item.i, name:item.product, price: item.price, size:item.size, color:item.color, serial:1, count: item.count
+            image:item.i, name:item.product, price: item.price, size:item.sizeChoose, color:item.colorChoose, serial:1, count: item.count
         }
     ))
 
@@ -155,7 +155,7 @@ dispatch(setAuthenticaed(false))
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
             {loading && (
    <View style={{justifyContent:'center', alignItems:'center',height:HEIGHT}}>
-   <LottieView source={require('./assets/197-glow-loading.json')}  ref={lottieRef}     style={{
+   <LottieView source={require('../assets/197-glow-loading.json')}  ref={lottieRef}     style={{
 width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
        
      }}  />
@@ -179,11 +179,11 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
               <Image source ={{uri:i.image}} style={{width:WIDTH*0.3, height:HEIGHT*0.15, borderWidth:1, borderColor:'transparent',borderRadius:10, }} />
             <View style={{marginLeft:10,width:WIDTH*0.5}}>
               
-                       <Text style={{width:WIDTH*0.4, fontWeight:'600', fontSize:18}}>{i.name}</Text>  
+                       <Text style={{width:WIDTH*0.6, fontWeight:'600', fontSize:18}}>{i.name}</Text>  
                   
            
              
-                   <Text style={{fontSize:16, marginTop:5, fontWeight:'400'}}>$ {  trial.map(item => item.id === index &&  <Text>{Math.round((item.count * i.price) * 100) / 100}</Text>) }</Text>
+                   <Text style={{fontSize:16, marginTop:5, fontWeight:'400'}}>$ {i.price}</Text>
         
                 <Text style={{marginTop:10, fontWeight:'400', fontSize:16, textTransform:'capitalize' }}>Color:  {i.color}</Text>
              
@@ -245,7 +245,7 @@ width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
             <Text  style={{color:'white', fontWeight:'600', alignSelf:'center',paddingVertical:10,fontSize:18 }}>Upload Review</Text>
             </TouchableOpacity>
             {spinner && (
-        <LottieView source={require('./assets/197-glow-loading.json')}       style={{
+        <LottieView source={require('../assets/197-glow-loading.json')}       style={{
           width:'100%', height:50,
                   
                 }} autoPlay loop/>
@@ -398,7 +398,7 @@ dispatch(setAuthenticaed(false))
     },[yes])
     let final = cartItems.map((item,index) => (
         {
-            image:item.i, name:item.product, price: item.price, size:item.size, color:item.color, serial:1, count: item.count
+            image:item.i, name:item.product, price: item.price, size:item.sizeChoose, color:item.colorChoose, serial:1, count: item.count
         }
     ))
   
@@ -407,7 +407,7 @@ dispatch(setAuthenticaed(false))
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
              {loading && (
    <View style={{justifyContent:'center', alignItems:'center',height:HEIGHT}}>
-   <LottieView source={require('./assets/197-glow-loading.json')}  ref={lottieRef}     style={{
+   <LottieView source={require('../assets/197-glow-loading.json')}  ref={lottieRef}     style={{
 width:'100%', zIndex:10,alignSelf:'center', transform:[{translateY:-30}]
        
      }}  />

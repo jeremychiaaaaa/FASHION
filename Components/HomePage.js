@@ -20,7 +20,7 @@ import CheckOut from './CheckOut'
 import FinalCheckOut from './FinalCheckOut';
 import { FavoritesStack } from './Favorites';
 import { useSelector, useDispatch } from 'react-redux';
-import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex,setChangeAddress,setSelectedAddress,setReviewAdded } from './redux/actions';
+import { setClicked, setSearchClicked,setFilter,setTab,setArrow,setImages,setUser,setNumberOfCartItems,setAuthenticaed,setIndexEdit, setProductName,setPriceEdit,setDuplicatedIndex,setChangeAddress,setSelectedAddress,setReviewAdded } from '../redux/actions';
 const Tab = createBottomTabNavigator();
 
 const HEIGHT = Dimensions.get('window').height
@@ -170,7 +170,7 @@ const nav = useNavigation()
                
 
                <View style={{position:'absolute', flexDirection:'row', right:0, marginRight:10}}>
-                <Text style={{alignSelf:'center',  fontSize:17}}>{cart}</Text>
+              
                <Ionicons name='cart-outline' size={28}  />
                </View>
                
@@ -261,15 +261,15 @@ const nav = useNavigation()
                </View>
         <View style={{ alignSelf:'center'}}>
             <TouchableOpacity>
-                <Text style={{fontSize:18, fontWeight:'600',borderWidth:1,padding:10,paddingHorizontal:40}}>View All</Text>
+                <Text style={{fontSize:18, fontWeight:'600',borderWidth:1,padding:10,paddingHorizontal:40,marginVertical:20}}>View All</Text>
             </TouchableOpacity>
         </View>
         <View>
             <Text style={{marginTop:20,marginLeft:15, fontSize:26, fontWeight:'700'}}>Take A Short Cut ➡️</Text>
             <Text style={{marginTop:5, fontSize:20, width:WIDTH*0.91, marginHorizontal:15,fontWeight:'400'}}>These are some of the popular categories that we think you might fancy !</Text>
         <FlatList 
-        data={data}
-        renderItem={renderItem2}
+        data={categories}
+        renderItem={renderCategories}
       numColumns={2}
       keyExtractor={(item) => item.id}
                 />
@@ -290,7 +290,7 @@ const nav = useNavigation()
         </View>
         <View style={{ alignSelf:'center'}}>
             <TouchableOpacity>
-                <Text style={{fontSize:18, fontWeight:'600',borderWidth:1,padding:10,paddingHorizontal:40}}>View All</Text>
+                <Text style={{fontSize:18, fontWeight:'600',borderWidth:1,padding:10,paddingHorizontal:40,marginVertical:20}}>View All</Text>
             </TouchableOpacity>
         </View>
 
@@ -302,24 +302,24 @@ const nav = useNavigation()
 const Categories = ({title,subtitle,image}) => {
     return(
             <View >
-            <TouchableOpacity style={{width:WIDTH*0.45, marginLeft:15,marginTop:0,height:HEIGHT*0.38, borderRadius:15, backgroundColor:'white', borderColor:'transparent', alignContent:'center', alignItems:'center', justifyContent:'center'}} >
+            <TouchableOpacity style={{width:WIDTH*0.45, marginLeft:15,marginVertical:10,height:HEIGHT*0.38, borderRadius:15, backgroundColor:'white', borderColor:'transparent', alignItems:'flex-start', justifyContent:'center'}} >
                 <Image source={{uri:image}} style={{width:'100%', height:HEIGHT*0.3, resizeMode:'cover'}}/>
           
-            <Text style={{fontWeight:'700',  alignSelf:'center',fontSize:18,marginTop:10,textTransform:'uppercase'  }}>{title}</Text>
-            <Text style={{fontWeight:'200',  alignSelf:'center',fontSize:16, marginTop:5 }}>{subtitle}</Text>
+            <Text style={{fontWeight:'700',  alignSelf:'center',fontSize:18,marginTop:10,textTransform:'uppercase',width:'100%'  }}>{title}</Text>
+            <Text style={{fontWeight:'200',fontSize:16, marginTop:5 }}>{subtitle}</Text>
     </TouchableOpacity>
   </View>
     )
 }
-const renderItem2 = ({item}) => {
+const renderCategories = ({item}) => {
     return(
         <Categories title={item.title} subtitle={item.subtitle} image={item.image} />
     )
 }
-const data = [
+const categories = [
     {
         id:1,
-        title:'NEW Fashion Design',
+        title:'NEW Fashion ',
         subtitle:'Change the ordinary',
         image:'https://images.unsplash.com/photo-1441123694162-e54a981ceba5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80'
     },
@@ -332,8 +332,8 @@ const data = [
 },
 {
     id:3,
-    title:'Formal Dress Code',
-    subtitle:'Capture The Whole Room',
+    title:'Formal Outfits',
+    subtitle:'Elegant & Classy',
     image:'https://images.unsplash.com/photo-1528227790829-d12620d0ff4c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80'
 },
 {
@@ -344,62 +344,3 @@ const data = [
 }
 ]
 
-export const HomeStack = () => {
-    const {click,cat,c,filter,tab,product,arrow,images,user,cart} = useSelector(state => state.userReducer)
-    const dispatch = useDispatch()
-
-    return(
-        <Tab.Navigator
-        screenOptions={{
-            tabBarShowLabel: false,
-            tabBarStyle:{borderTopColor:'transparent'},
-        }}
-        >
-            <Tab.Screen name='Home' component={HomePage} options={{
-                tabBarIcon : ({color,size,focused}) => (
-                    <Ionicons name='home-outline' size={24} />
-                ),
-                headerShown:false
-            }}/>
-            <Tab.Screen name='Discover' component={DiscoverStack} options={{
-                tabBarIcon : ({color,size,focused}) => (
-                    <Ionicons name='compass-outline' size={28} />
-                ),
-                headerShown:false
-            }}/>
-            <Tab.Screen
-            name='Check Out' component={CheckOutStack} options={{
-                tabBarIcon : ({color,size,focused}) => (
-            
-
-                    <TouchableOpacity onPress={() => {
-                        dispatch(setAuthenticaed(true))
-                       }} >
-                    <Ionicons name='cart-outline' size={28} />
-               </TouchableOpacity>
-              
-                ),
-                headerShown:false,
-              tabBarBadge:cart
-            }}
-            />
-            <Tab.Screen name='Favorites' component={Favorites} options={{
-                tabBarIcon : ({color,size,focused}) => (
-                    <Ionicons name='heart-outline' size={28} />
-                ),
-                headerShown:false
-            }} />
-            <Tab.Screen name='Profile' component={Profile}  options={{
-                tabBarIcon : ({color,size,focused}) => (
-                    <TouchableOpacity onPress={() => {
-                        dispatch(setAuthenticaed(true))
-                       }}>
-      <Feather name='user' size={28} />
-                    </TouchableOpacity>
-            
-                ),
-                headerShown:false
-            }}/>
-        </Tab.Navigator>
-    )
-}
